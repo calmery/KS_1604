@@ -22,6 +22,23 @@ const io = require( 'socket.io' )( runtime.http )
 
 io.sockets.on( 'connection', function( socket ){
     
+    /*** Check flower ***/
+
+    function checkType( filePath ){
+        child_process.exec( 'python vision/msVision.py ' + filePath, function( error, stdOut, stdError ){
+            if( !error && !stdError ){
+                const data = JSON.parse( stdOut )
+                const tags = data.description.tags.filter( ( e ) => e.toLowerCase() ).join( '' )
+                if( tags.indexOf( 'flower' ) !== -1 || tags.indexOf( 'plant' ) !== -1 )
+                    setNewFlower( data )
+            }
+        } )
+    }
+    
+    function setNewFlower( data ){
+        
+    }
+    
     socket.on( 'message', ( message ) => {
         request( config.message.base + config.message.endPoint.chat + '?message=' + encodeURI( message ) + '&key=' + config.message.key, ( error, response, body ) => {
             if( !error && response.statusCode == 200 )
@@ -38,21 +55,3 @@ io.sockets.on( 'connection', function( socket ){
     } )
     
 } )
-
-/*** Check flower ***/
-
-function checkType( filePath ){
-    child_process.exec( 'python vision/msVisionDummy.py ' + filePath, function( error, stdOut, stdError ){
-        console.log(error)
-        if( !error && !stdError ){
-            const data = JSON.parse( stdOut )
-            const tags = data.description.tags.filter( ( e ) => e.toLowerCase() )
-            if( tags.indexOf( 'flower' ) !== -1 )
-                main()
-        }
-    } )
-}
-
-function main(){
-    console.log( 'aaa' )
-}
