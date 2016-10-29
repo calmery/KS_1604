@@ -10,9 +10,6 @@
         <meta http-equiv="content-script-type" content="text/javascript">
         <link rel="stylesheet" href="resources/css/base.css">
         <link rel="stylesheet" href="resources/css/layout.css">
-        <style>
-            
-        </style>
     </head>
     
     <body>
@@ -20,35 +17,30 @@
         <video id="video"></video>
         <canvas id="capture"></canvas>
         
-        <div id="chatAreaBackground"></div>
-        <div id="chatArea">
-            <div class="line clearfix">
-                <div class="message float_l">
-                    <div class="message-icon">
-                        <div class="icon" style="background: url( icon ); background-size: cover"></div>
-                    </div>
-                    <div class="message-message">
-                        alsdjlakjsdlk<br><br>asd<br>asdasdlalsdknalksndlkansdlkans
-                    </div>
-                </div>
-            </div>
-            <div class="line clearfix">
-                <div class="message clearfix me float_r">
-                    <div class="message-message">
-                        alsdjlakjsdlk<br><br>asd<br>asdasdlalsdknalksndlkansdlkans
-                    </div>
-                    <div class="message-icon">
-                        <div class="icon" style="background: url( icon ); background-size: cover"></div>
-                    </div>
+        <div id="chatSession">
+            <div id="chatAreaBackground"></div>
+            <div id="chatArea"></div>
+
+            <div id="inputArea">
+                <div id="inputAreaWrap">
+                    <textarea id="input"></textarea>
+                    <a href="javascript: void(0)" onclick="sendMessage('message')">
+                        <div id="sendBtn">送信</div>
+                    </a>
                 </div>
             </div>
         </div>
         
-        <div id="inputArea"></div>
+        <div id="captureSession">
+            <a href="javascript: void(0)" onclick="capture()">
+                <div id="captureBtn">Capture</div>
+            </a>
+        </div>
         
         <script src="/socket.io/socket.io.js"></script>
         <script src="resources/js/preload.js"></script>
         <script src="resources/js/capture.js"></script>
+        <script src="resources/js/messanger.js"></script>
             
     </body>
     

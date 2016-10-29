@@ -16,9 +16,12 @@ navigator.webkitGetUserMedia( {
     console.log( 'Error' )
 } )
 
-window.addEventListener( 'keydown', function( e ){
-    if( e.keyCode === 32 ){
-        ctx.drawImage( video, 0, 0, 640, 480 )
-        socket.emit( 'capture', canvas.toDataURL( 'png' ) )
-    }
-}, false )
+function capture(){
+    ctx.drawImage( video, 0, 0, 640, 480 )
+    socket.emit( 'capture', canvas.toDataURL( 'png' ) )
+}
+
+socket.on( 'setupComplated', function(){
+    chatSession.style.display = 'block'
+    captureSession.style.display = 'none'
+} )

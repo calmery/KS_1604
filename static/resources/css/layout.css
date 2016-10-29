@@ -6,6 +6,14 @@ body {
     display: none;
 }
 
+video {
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed
+}
+
 #chatAreaBackground {
     width: 100%;
     height: 100%;
@@ -13,7 +21,7 @@ body {
     top: 0;
     left: 0;
     position: fixed;
-    z-index: 1000;
+    z-index: 100;
 }
 #chatArea {
     width: 384px;
@@ -21,6 +29,7 @@ body {
     left: 128px;
     position: absolute;
     z-index: 1001;
+    margin-bottom:70px
 }
 .icon {
     width: 35px;
@@ -59,6 +68,53 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    position: absolute;
+    position: fixed;
     z-index: 1002;
+}
+#sendBtn {
+    width: 50px;
+    height: 35px;
+    line-height: 27pt;
+    text-align: center;
+    background: rgba( 74, 144, 226, 1 );
+    color: rgba(255,255,255,1);
+    border-radius: 3px;
+    float: left;
+    margin-top: 7.5px;
+}
+#input {
+    width: 309px;
+    float: left;
+    height: 25px;
+    padding: 0;
+    margin: 0;
+    padding: 0 10px;
+    padding-top: 10px;
+    margin-top: 7.5px;
+    border: 0;
+    margin-right: 5px;
+    border-bottom: 1px solid rgba( 100, 100, 100, 1)
+}
+#inputAreaWrap {
+    width: 384px;
+    left: 128px;
+    position: absolute;
+}
+#input:focus {
+    outline: none
+}
+
+#chatSession {
+    z-index: 1000;
+    display: none;
+}
+#captureSession {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
 }

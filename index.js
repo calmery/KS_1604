@@ -60,16 +60,20 @@ io.sockets.on( 'connection', function( socket ){
     }
     
     socket.on( 'message', ( message ) => {
-        request( config.message.base + config.message.endPoint.chat + '?message=' + encodeURI( message ) + '&key=' + config.message.key, ( error, response, body ) => {
+        console.log( 'Send Message to UserLocal' )
+        request.get( config.message.base + config.message.endPoint.chat + '?message=' + encodeURI( message ) + '&key=' + config.message.key, ( error, response, body ) => {
+            console.log( 'Get Message from UserLocal' )
             if( !error && response.statusCode == 200 ){
                 var responseMessage = JSON.parse( body ).result
+                /*
                 if( me.personality !== undefined ){
                     request( config.message.base + config.message.endPoint.character + '?message=' + encodeURI( responseMessage ) + '&key=' + config.message.key + '&character_type=' + me.personality, ( error, response, body ) => {
                         if( !error && response.statusCode == 200 ){
                             io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
                         }
                     })
-                } else io.sockets.to( socket.id ).emit( 'message', responseMessage )
+                } else */
+                io.sockets.to( socket.id ).emit( 'message', responseMessage )
             }
         } )
     } )
