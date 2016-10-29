@@ -14,6 +14,9 @@ module.exports.run = () => {
     const port = server.listen().address().port
     console.log( 'Running app on localhost:' + port )
     
+    app.use( '/icon', function( request, response ){
+        response.sendFile( utility.fixPath( __dirname, '..', 'tmp', 'captured.png' ) )
+    } )
     app.use( express.static( utility.fixPath( __dirname, '..', 'static' ) ) )
 
     return {

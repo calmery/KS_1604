@@ -8,13 +8,43 @@
         <meta http-equiv="cache-control" content="no-cache">
         <meta http-equiv="content-style-type" content="text/css">
         <meta http-equiv="content-script-type" content="text/javascript">
+        <link rel="stylesheet" href="resources/css/base.css">
         <link rel="stylesheet" href="resources/css/layout.css">
+        <style>
+            
+        </style>
     </head>
     
     <body>
         
         <video id="video"></video>
         <canvas id="capture"></canvas>
+        
+        <div id="chatAreaBackground"></div>
+        <div id="chatArea">
+            <div class="line clearfix">
+                <div class="message float_l">
+                    <div class="message-icon">
+                        <div class="icon" style="background: url( icon ); background-size: cover"></div>
+                    </div>
+                    <div class="message-message">
+                        alsdjlakjsdlk<br><br>asd<br>asdasdlalsdknalksndlkansdlkans
+                    </div>
+                </div>
+            </div>
+            <div class="line clearfix">
+                <div class="message clearfix me float_r">
+                    <div class="message-message">
+                        alsdjlakjsdlk<br><br>asd<br>asdasdlalsdknalksndlkansdlkans
+                    </div>
+                    <div class="message-icon">
+                        <div class="icon" style="background: url( icon ); background-size: cover"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="inputArea"></div>
         
         <script src="/socket.io/socket.io.js"></script>
         <script src="resources/js/preload.js"></script>

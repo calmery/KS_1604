@@ -20,12 +20,23 @@ electron.run( runtime.port )
 
 const io = require( 'socket.io' )( runtime.http )
 
+/* Flower */
+
+const personality = [ 'cat', 'dog', undefined ]
+
+var me = {
+    name: null,
+    personality: null,
+    history: [],
+    character: true
+}
+
 io.sockets.on( 'connection', function( socket ){
     
     /*** Check flower ***/
 
     function checkType( filePath ){
-        child_process.exec( 'python vision/msVision.py ' + filePath, function( error, stdOut, stdError ){
+        child_process.exec( 'python vision/msVisionDummy.py ' + filePath, function( error, stdOut, stdError ){
             if( !error && !stdError ){
                 const data = JSON.parse( stdOut )
                 const tags = data.description.tags.filter( ( e ) => e.toLowerCase() ).join( '' )
@@ -37,12 +48,29 @@ io.sockets.on( 'connection', function( socket ){
     
     function setNewFlower( data ){
         
+        me.name = null
+        me.personality = null
+        me.history = []
+        
+        me.personality = personality[Math.floor( Math.random() * 3 )]
+        console.log( 'This flower personality is ' + ( me.personality ? me.personality : 'normal' ) )
+        
+        socket.emit( 'setupComplated', me )
+        
     }
     
     socket.on( 'message', ( message ) => {
         request( config.message.base + config.message.endPoint.chat + '?message=' + encodeURI( message ) + '&key=' + config.message.key, ( error, response, body ) => {
-            if( !error && response.statusCode == 200 )
-                io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
+            if( !error && response.statusCode == 200 ){
+                var responseMessage = JSON.parse( body ).result
+                if( me.personality !== undefined ){
+                    request( config.message.base + config.message.endPoint.character + '?message=' + encodeURI( responseMessage ) + '&key=' + config.message.key + '&character_type=' + me.personality, ( error, response, body ) => {
+                        if( !error && response.statusCode == 200 ){
+                            io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
+                        }
+                    })
+                } else io.sockets.to( socket.id ).emit( 'message', responseMessage )
+            }
         } )
     } )
     
