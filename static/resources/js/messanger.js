@@ -9,6 +9,8 @@ var chatArea = document.getElementById( 'chatArea' ),
     unfocus  = document.getElementById( 'unfocus' ),
     sendBtn  = document.getElementById( 'sendBtn' )
 
+// Messanger
+
 function getMessage(){
     if( input.value[input.value.length-1] === '\n' ) input.value = input.value.slice( 0, input.value.length-1 )
     return input.value
@@ -25,6 +27,8 @@ function sendMessage(){
         resetMessage()
     }
 }
+
+// events
 
 document.getElementById( 'input' ).addEventListener( 'keyup', function( e ){
     if( e.keyCode === 13 ){
