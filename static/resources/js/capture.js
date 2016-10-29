@@ -19,5 +19,6 @@ navigator.webkitGetUserMedia( {
 window.addEventListener( 'keydown', function( e ){
     if( e.keyCode === 32 ){
         ctx.drawImage( video, 0, 0, 640, 480 )
+        socket.emit( 'capture', canvas.toDataURL( 'png' ) )
     }
 }, false )

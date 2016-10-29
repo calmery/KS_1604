@@ -1,6 +1,6 @@
 app:
-    width: 800
-    height: 600
+    width: 640
+    height: 502
     center: true
     fullscreen: false
     fullscreenenable: false
