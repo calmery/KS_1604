@@ -36,13 +36,17 @@ io.sockets.on( 'connection', function( socket ){
     /*** Check flower ***/
 
     function checkType( filePath ){
-        child_process.exec( 'python vision/msVisionDummy.py ' + filePath, function( error, stdOut, stdError ){
+        console.log( 'Vision : ' + 'python vision/msVision.py ' + filePath )
+        
+        child_process.exec( 'python ./vision/msVisionDummy.py ' + filePath, function( error, stdOut, stdError ){
             if( !error && !stdError ){
                 const data = JSON.parse( stdOut )
                 const tags = data.description.tags.filter( ( e ) => e.toLowerCase() ).join( '' )
                 if( tags.indexOf( 'flower' ) !== -1 || tags.indexOf( 'plant' ) !== -1 )
                     setNewFlower( data )
-            }
+                } else {
+                    console.log( error )
+                }
         } )
     }
     
@@ -73,6 +77,10 @@ io.sockets.on( 'connection', function( socket ){
                         }
                     })
                 } else */
+                if( me.personality === undefined ){
+                    responseMessage = responseMessage.replace( /[?|？|!|！]/g, '' )
+                    responseMessage += 'ですわ'
+                }
                 io.sockets.to( socket.id ).emit( 'message', responseMessage )
             }
         } )

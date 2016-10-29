@@ -118,3 +118,34 @@ video {
     height: 100%;
     z-index: 1000;
 }
+
+#captureBtn {
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    border: 5px solid rgba( 255,255,255,.2 );
+    background: rgba(255,255,255,.2);
+    text-align: center;
+    line-height: 150pt;
+    font-size: 25px;
+    color: rgba( 0,0,0,1 );
+    top: 50%;
+    left: 50%;
+    margin: -100px 0 0 -100px;
+    position: absolute;
+}
+#reloadBtn {
+    width: 50px;
+    height: 35px;
+    line-height: 27pt;
+    text-align: center;
+    background: rgba( 255,255,255,1 );
+    color: rgba(0,0,0,1);
+    border-radius: 3px;
+    float: left;
+    margin-top: 7.5px;
+    top: 10px;
+    left: 20px;
+    position: fixed;
+    z-index: 10000;
+}
