@@ -22,9 +22,8 @@ io.sockets.on( 'connection', function( socket ){
     socket.on( 'message', ( message ) => {
         request( config.message.base + config.message.endPoint.chat + '?message=' + encodeURI( message ) + '&key=' + config.message.key, ( error, response, body ) => {
             if( !error && response.statusCode == 200 )
-                console.log( JSON.parse( body ).result )
+                io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
         } )
-
     } )
     
 } )

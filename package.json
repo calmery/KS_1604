@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "devDependencies": {
+    "data-uri-to-buffer": "0.0.4",
     "electron": "^1.4.4",
     "express": "^4.14.0",
     "js-yaml": "^3.6.1",
