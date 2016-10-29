@@ -59,31 +59,74 @@ io.sockets.on( 'connection', function( socket ){
         me.personality = personality[Math.floor( Math.random() * 3 )]
         console.log( 'This flower personality is ' + ( me.personality ? me.personality : 'normal' ) )
         
-        socket.emit( 'setupComplated', me )
+        /*
+        request.post({
+            url: "https://www.googleapis.com/urlshortener/v1/url",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            json: true,
+            body: JSON.stringify({
+                longUrl: 'https://calmery.sakura.ne.jp/rtc'
+            }),
+        }, function(error, response, body) {
+            console.log(response)
+        } )
+        */
+        
+        socket.emit( 'setupComplated', {
+            me: me
+        } )
         
     }
     
+    var isCheckName = false
+    
     socket.on( 'message', ( message ) => {
-        console.log( 'Send Message to UserLocal' )
-        request.get( config.message.base + config.message.endPoint.chat + '?message=' + encodeURI( message ) + '&key=' + config.message.key, ( error, response, body ) => {
-            console.log( 'Get Message from UserLocal' )
-            if( !error && response.statusCode == 200 ){
-                var responseMessage = JSON.parse( body ).result
-                /*
-                if( me.personality !== undefined ){
-                    request( config.message.base + config.message.endPoint.character + '?message=' + encodeURI( responseMessage ) + '&key=' + config.message.key + '&character_type=' + me.personality, ( error, response, body ) => {
-                        if( !error && response.statusCode == 200 ){
-                            io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
-                        }
-                    })
-                } else */
-                if( me.personality === undefined ){
-                    responseMessage = responseMessage.replace( /[?|？|!|！]/g, '' )
-                    responseMessage += 'ですわ'
-                }
-                io.sockets.to( socket.id ).emit( 'message', responseMessage )
+        
+        // Line session
+        if( isCheckName || message.toLowerCase().indexOf( 'line' ) !== -1 && message.indexOf( '教' ) !== -1 ){
+            
+            if( !isCheckName ){
+                io.sockets.to( socket.id ).emit( 'message', 'あなたの名前は？' )
+                isCheckName = true
+            } else {
+                
+                var key = require('crypto').createHash('md5').update(Date(), 'buffer').digest('hex')
+                var value = message
+                request.get( 'http://calmery.me/postNameData.php?key=' + key + '&value=' + encodeURI( message ), function( error, response, body ){
+                    if( !error ){
+                        io.sockets.to( socket.id ).emit( 'message', message + 'さん！\nこのコードを LINE で送ってね\n' + key )
+                    }
+                } )
+                
+                isCheckName = false
             }
-        } )
+            
+        } else {
+        
+            console.log( 'Send Message to UserLocal' )
+            request.get( config.message.base + config.message.endPoint.chat + '?message=' + encodeURI( message ) + '&key=' + config.message.key, ( error, response, body ) => {
+                console.log( 'Get Message from UserLocal' )
+                if( !error && response.statusCode == 200 ){
+                    var responseMessage = JSON.parse( body ).result
+                    /*
+                    if( me.personality !== undefined ){
+                        request( config.message.base + config.message.endPoint.character + '?message=' + encodeURI( responseMessage ) + '&key=' + config.message.key + '&character_type=' + me.personality, ( error, response, body ) => {
+                            if( !error && response.statusCode == 200 ){
+                                io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
+                            }
+                        })
+                    } else */
+                    if( me.personality === undefined ){
+                        responseMessage = responseMessage.replace( /[?|？|!|！]/g, '' )
+                        responseMessage += 'ですわ'
+                    }
+                    io.sockets.to( socket.id ).emit( 'message', responseMessage )
+                }
+            } )
+        
+        }
     } )
     
     socket.on( 'capture', ( raw ) => {

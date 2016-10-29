@@ -21,7 +21,8 @@ function capture(){
     socket.emit( 'capture', canvas.toDataURL( 'png' ) )
 }
 
-socket.on( 'setupComplated', function(){
+socket.on( 'setupComplated', function(obj){
     chatSession.style.display = 'block'
     captureSession.style.display = 'none'
+    console.log( obj )
 } )

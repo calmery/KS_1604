@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://skyway.io/dist/v2/0.3/peer.js"></script>
+    <script type="text/javascript" src="videochat.js"></script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background: #000;
+        }
+        #ids {
+            padding:25px;
+            top: 25px;
+            left: 50px;
+            background: rgba(255,255,255,.5);
+            position: fixed;
+            color: #fff;
+        }
+        #btns {
+            padding:25px;
+            bottom: 25px;
+            left: 50px;
+            background: rgba(255,255,255,.5);
+            position: fixed;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <video id="peer-video" style="width: 100%;height: 100%" autoplay></video>
+    </div>
+    <div id="ids">
+        Me : <span id="my-id"></span><br>
+        Peer : <span id="peer-id"></span>
+    </div>
+    <div id="btns">
+        <input type="text" placeholder="PeerID" id="peer-id-input">
+        <button id="call-start">Start Call</button>
+        <button id="call-end">End Call</button>
+    </div>
+</body>
+
+</html>
