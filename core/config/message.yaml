@@ -1,0 +1,5 @@
+base: 'https://chatbot-api.userlocal.jp/api/'
+endPoint:
+    chat: 'chat'
+    character: 'character'
+key: 'bfdc7c72ab01f54f01d3'
