@@ -81,6 +81,7 @@ io.sockets.on( 'connection', function( socket ){
     }
     
     var isCheckName = false
+    var key
     
     socket.on( 'message', ( message ) => {
         
@@ -88,15 +89,16 @@ io.sockets.on( 'connection', function( socket ){
         if( isCheckName || message.toLowerCase().indexOf( 'line' ) !== -1 && message.indexOf( '教' ) !== -1 ){
             
             if( !isCheckName ){
+                key = message.replace( /[LINE|教えて|ちゃん|！|!]/g, '' )
                 io.sockets.to( socket.id ).emit( 'message', 'あなたの名前は？' )
                 isCheckName = true
             } else {
                 
-                var key = require('crypto').createHash('md5').update(Date(), 'buffer').digest('hex')
+                 // require('crypto').createHash('md5').update(Date(), 'buffer').digest('hex')
                 var value = message
-                request.get( 'http://calmery.me/postNameData.php?key=' + key + '&value=' + encodeURI( message ), function( error, response, body ){
+                request.get( 'http://calmery.me/postNameData.php?key=' + encodeURI( key ) + '&value=' + encodeURI( message ), function( error, response, body ){
                     if( !error ){
-                        io.sockets.to( socket.id ).emit( 'message', message + 'さん！\nこのコードを LINE で送ってね\n' + key )
+                        io.sockets.to( socket.id ).emit( 'message', message + 'さん！<br>LINEで「召喚！' + key + '」とメッセージを送ってね' )
                     }
                 } )
                 

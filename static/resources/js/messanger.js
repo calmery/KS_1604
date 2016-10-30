@@ -39,3 +39,36 @@ document.getElementById( 'input' ).addEventListener( 'keyup', function( e ){
 socket.on( 'message', function( message ){
     chatArea.innerHTML += opponentStartTag + message + opponentEndTag
 } )
+
+var speech = new webkitSpeechRecognition()
+speech.lang = 'ja'
+
+var toggleBtn = document.getElementById( 'toggleBtn' ),
+    isRecoding = false
+
+toggleBtn.addEventListener( 'click', function(){
+    if( !isRecoding ){
+        console.log( 'Start' )
+        speech.start()
+        isRecoding = true
+    } else {
+        console.log( 'Stop' )
+        speech.stop()
+        isRecoding = false
+    }
+} )
+
+speech.onsoundstart = function(){
+    console.log('asdasd')
+};
+
+speech.onresult = function(e){
+    console.log( 'Result : ' + e.results[0][0].transcript )
+    var result = e.results[0][0].transcript
+    chatArea.innerHTML = result
+    sendMessage()
+}
+
+speech.onerror= function(e){
+    console.log(e)
+};
