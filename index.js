@@ -38,7 +38,7 @@ io.sockets.on( 'connection', function( socket ){
     function checkType( filePath ){
         console.log( 'Vision : ' + 'python vision/msVision.py ' + filePath )
         
-        child_process.exec( 'python ./vision/msVisionDummy.py ' + filePath, function( error, stdOut, stdError ){
+        child_process.exec( 'python ./vision/msVision.py ' + filePath, function( error, stdOut, stdError ){
             if( !error && !stdError ){
                 const data = JSON.parse( stdOut )
                 const tags = data.description.tags.filter( ( e ) => e.toLowerCase() ).join( '' )
@@ -112,14 +112,15 @@ io.sockets.on( 'connection', function( socket ){
                 console.log( 'Get Message from UserLocal' )
                 if( !error && response.statusCode == 200 ){
                     var responseMessage = JSON.parse( body ).result
-                    /*
+                    
                     if( me.personality !== undefined ){
                         request( config.message.base + config.message.endPoint.character + '?message=' + encodeURI( responseMessage ) + '&key=' + config.message.key + '&character_type=' + me.personality, ( error, response, body ) => {
                             if( !error && response.statusCode == 200 ){
                                 io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
                             }
                         })
-                    } else */
+                    }
+                    
                     if( me.personality === undefined ){
                         responseMessage = responseMessage.replace( /[?|？|!|！]/g, '' )
                         responseMessage += 'ですわ'
