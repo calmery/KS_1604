@@ -35,12 +35,14 @@ io.sockets.on( 'connection', function( socket ){
     
     /*** Check flower ***/
 
-    function checkType( filePath ){
+    function checkType(){
+        var filePath = utility.fixPath( __dirname, 'tmp', 'captured.png' )
         console.log( 'Vision : ' + 'python vision/msVision.py ' + filePath )
         
         child_process.exec( 'python ./vision/msVision.py ' + filePath, function( error, stdOut, stdError ){
             if( !error && !stdError ){
                 const data = JSON.parse( stdOut )
+                console.log(data)
                 const tags = data.description.tags.filter( ( e ) => e.toLowerCase() ).join( '' )
                 if( tags.indexOf( 'flower' ) !== -1 || tags.indexOf( 'plant' ) !== -1 )
                     setNewFlower( data )
@@ -57,6 +59,10 @@ io.sockets.on( 'connection', function( socket ){
         me.history = []
         
         me.personality = personality[Math.floor( Math.random() * 3 )]
+        
+        // require('onecolor')('#650042').hsv()._hue * 360
+        var personalitys = []
+        
         console.log( 'This flower personality is ' + ( me.personality ? me.personality : 'normal' ) )
         
         /*
@@ -119,13 +125,11 @@ io.sockets.on( 'connection', function( socket ){
                                 io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
                             }
                         })
-                    }
-                    
-                    if( me.personality === undefined ){
+                    }else if( me.personality === undefined ){
                         responseMessage = responseMessage.replace( /[?|？|!|！]/g, '' )
                         responseMessage += 'ですわ'
+                        io.sockets.to( socket.id ).emit( 'message', responseMessage )
                     }
-                    io.sockets.to( socket.id ).emit( 'message', responseMessage )
                 }
             } )
         
@@ -136,7 +140,22 @@ io.sockets.on( 'connection', function( socket ){
         const path = utility.fixPath( __dirname, 'tmp', 'captured.png' )
         fs.writeFile( path, utility.decodeBase64Image( raw ).data, function( error ){ 
             if( !error )
-                checkType( path )
+                console.log( 'Saved : tmp/captured.png' )
+        } )
+    } )
+    
+    socket.on( 'iconCapture', ( raw ) => {
+        const path = utility.fixPath( __dirname, 'tmp', 'icon.png' )
+        fs.writeFile( path, utility.decodeBase64Image( raw.data ).data, function( error ){ 
+            if( !error ){
+                console.log( 'Saved : tmp/icon.png' )
+                console.log(raw.r)
+                console.log(raw.g)
+                console.log(raw.b)
+                var hue = require('onecolor')('rgba(' + raw.r + ',' + raw.g + ',' + raw.b + ',1)').hsv()._hue * 360
+                console.log(hue)
+                checkType()
+            }
         } )
     } )
     
