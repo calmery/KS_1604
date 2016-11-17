@@ -1,0 +1,39 @@
+{
+    'base': 'stations',
+    'clouds': {
+        'all': 75
+    },
+    'cod': 200,
+    'coord': {
+        'lat': 32.8,
+        'lon': 130.7
+    },
+    'dt': 1479369600,
+    'id': 1863250,
+    'main': {
+        'humidity': 54,
+        'pressure': 1021,
+        'temp': 16.11,
+        'temp_max': 17,
+        'temp_min': 15
+    },
+    'name': 'Hanabatachō',
+    'sys': {
+        'country': 'JP',
+        'id': 7554,
+        'message': 0.0028,
+        'sunrise': 1479332967,
+        'sunset': 1479370481,
+        'type': 1
+    },
+    'visibility': 10000,
+    'weather': [{
+        'description': 'broken clouds',
+        'icon': '04d',
+        'id': 803,
+        'main': 'Clouds'
+  }],
+    'wind': {
+        'speed': 1
+    }
+}
