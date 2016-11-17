@@ -22,7 +22,7 @@ const io = require( 'socket.io' )( runtime.http )
 
 /* Flower */
 
-const personality = [ 'cat', 'dog', undefined ]
+const personality = [ 'cat', 'dog', 'ojousama' ]
 
 var me = {
     name: null,
@@ -35,7 +35,7 @@ io.sockets.on( 'connection', function( socket ){
     
     /*** Check flower ***/
 
-    function checkType(){
+    function checkType(hue){
         var filePath = utility.fixPath( __dirname, 'tmp', 'captured.png' )
         console.log( 'Vision : ' + 'python vision/msVision.py ' + filePath )
         
@@ -45,25 +45,25 @@ io.sockets.on( 'connection', function( socket ){
                 console.log(data)
                 const tags = data.description.tags.filter( ( e ) => e.toLowerCase() ).join( '' )
                 if( tags.indexOf( 'flower' ) !== -1 || tags.indexOf( 'plant' ) !== -1 )
-                    setNewFlower( data )
+                    setNewFlower( data, hue )
                 } else {
                     console.log( error )
                 }
         } )
     }
     
-    function setNewFlower( data ){
+    function setNewFlower( data, hue ){
+        
+        console.log( 'set flower name : ' + hue )
         
         me.name = null
         me.personality = null
-        me.history = []
         
-        me.personality = personality[Math.floor( Math.random() * 3 )]
+        if( 0 <= hue && hue < 120 ) me.personality = 'dog'
+        else if( 120 <= hue && hue < 240 ) me.personality = 'cat'
+        else if( 240 <= hue && hue < 360 ) me.personality = 'ojousama'
         
-        // require('onecolor')('#650042').hsv()._hue * 360
-        var personalitys = []
-        
-        console.log( 'This flower personality is ' + ( me.personality ? me.personality : 'normal' ) )
+        console.log( 'This flower personality is ' + me.personality )
         
         /*
         request.post({
@@ -102,13 +102,14 @@ io.sockets.on( 'connection', function( socket ){
                 
                  // require('crypto').createHash('md5').update(Date(), 'buffer').digest('hex')
                 var value = message
-                request.get( 'http://calmery.me/postNameData.php?key=' + encodeURI( key ) + '&value=' + encodeURI( message ), function( error, response, body ){
+                request.get( 'http://calmery.me/postNameData.php?key=' + encodeURI( key ) + '&value=' + encodeURI( message ) + '&lat=' + '' + '&lot=' + '', function( error, response, body ){
                     if( !error ){
                         io.sockets.to( socket.id ).emit( 'message', message + 'さん！<br>LINEで「召喚！' + key + '」とメッセージを送ってね' )
                     }
                 } )
                 
                 isCheckName = false
+                
             }
             
         } else {
@@ -119,13 +120,13 @@ io.sockets.on( 'connection', function( socket ){
                 if( !error && response.statusCode == 200 ){
                     var responseMessage = JSON.parse( body ).result
                     
-                    if( me.personality !== undefined ){
+                    if( me.personality !== 'ojousama' ){
                         request( config.message.base + config.message.endPoint.character + '?message=' + encodeURI( responseMessage ) + '&key=' + config.message.key + '&character_type=' + me.personality, ( error, response, body ) => {
                             if( !error && response.statusCode == 200 ){
                                 io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
                             }
                         })
-                    }else if( me.personality === undefined ){
+                    } else if( me.personality === 'ojousama' ){
                         responseMessage = responseMessage.replace( /[?|？|!|！]/g, '' )
                         responseMessage += 'ですわ'
                         io.sockets.to( socket.id ).emit( 'message', responseMessage )
@@ -154,7 +155,7 @@ io.sockets.on( 'connection', function( socket ){
                 console.log(raw.b)
                 var hue = require('onecolor')('rgba(' + raw.r + ',' + raw.g + ',' + raw.b + ',1)').hsv()._hue * 360
                 console.log(hue)
-                checkType()
+                checkType(hue)
             }
         } )
     } )
