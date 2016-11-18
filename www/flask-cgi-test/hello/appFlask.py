@@ -1,9 +1,10 @@
-# -*- codinf: utf-8 -*-
+# -*- coding: utf-8 -*-
 #!/home/sojo-patchworks/local/python/bin/python3
 from flask import Flask, request, abort
 import json
 import requests
 import urllib.parse
+from weather import *
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -30,9 +31,20 @@ def callback():
     #raise Exception(body)
     #app.logger.info("Request body: " + body)
     
-    if not ("召喚！" in body['events'][0]['message']['text']) :
-        r = requests.get( 'https://chatbot-api.userlocal.jp/api/chat?message=' + urllib.parse.quote(body['events'][0]['message']['text']) + '&key=bfdc7c72ab01f54f01d3' )
+    if not ("召喚！" in body['events'][0]['message']['text']):
+        r = requests.get('https://chatbot-api.userlocal.jp/api/chat?message=' + urllib.parse.quote(body['events'][0]['message']['text']) + '&key=bfdc7c72ab01f54f01d3' )
         line_bot_api.reply_message(body['events'][0]['replyToken'],TextSendMessage(text=json.loads(r.text)['result']))
+    elif('天気' in body['events'][0]['message']['text']):
+        weather = weather_json(lat='35.7126775', lon='139.761989')
+        name = weather['name']
+        description = weather['weather']['description']
+        main = weather['weather']['main']
+        temp_max = weather['main']['temp_max']
+        temp_min = weather['main']['temp_min']
+        humidity = weather['main']['humidity']
+        speed = weather['wind']['speed']
+        message = '場所：'+name+'\n天気:'+description+'\n最高気温：'+temp_max+'\n最低気温：'+temp_min+'\n湿度：'+humidity+'\n風速：'+speed
+        line_bot_api.reply_message(body['events'][0]['replyToken'], TextSendMessage(text=message))
     else :
         line_bot_api.reply_message(body['events'][0]['replyToken'],TextSendMessage(text=json.loads( requests.get( 'http://calmery.me/getNameData.php' ).text )[body['events'][0]['message']['text'].replace('召喚！', '')] + 'さん！おかえりなさい！'))
 
