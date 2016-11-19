@@ -39,7 +39,7 @@ io.sockets.on( 'connection', function( socket ){
         var filePath = utility.fixPath( __dirname, 'tmp', 'captured.png' )
         console.log( 'Vision : ' + 'python vision/msVision.py ' + filePath )
         
-        child_process.exec( 'python ./vision/msVision.py ' + filePath, function( error, stdOut, stdError ){
+        child_process.exec( 'python ./vision/msVisionDummy.py ' + filePath, function( error, stdOut, stdError ){
             if( !error && !stdError ){
                 const data = JSON.parse( stdOut )
                 console.log(data)
@@ -62,6 +62,8 @@ io.sockets.on( 'connection', function( socket ){
         if( 0 <= hue && hue < 120 ) me.personality = 'dog'
         else if( 120 <= hue && hue < 240 ) me.personality = 'cat'
         else if( 240 <= hue && hue < 360 ) me.personality = 'ojousama'
+        
+        // me.personality = 'cat'
         
         console.log( 'This flower personality is ' + me.personality )
         
@@ -102,7 +104,8 @@ io.sockets.on( 'connection', function( socket ){
                 
                  // require('crypto').createHash('md5').update(Date(), 'buffer').digest('hex')
                 var value = message
-                request.get( 'http://calmery.me/postNameData.php?key=' + encodeURI( key ) + '&value=' + encodeURI( message ) + '&lat=' + '' + '&lot=' + '', function( error, response, body ){
+                console.log('http://calmery.me/postNameData.php?key=' + encodeURI( key ) + '&value=' + encodeURI( message ) + '&lat=' + '35.7126775' + '&lon=' + '139.761989')
+                request.get( 'http://calmery.me/postNameData.php?key=' + encodeURI( key ) + '&value=' + encodeURI( message ) + '&lat=' + '35.7126775' + '&lon=' + '139.761989', function( error, response, body ){
                     if( !error ){
                         io.sockets.to( socket.id ).emit( 'message', message + 'さん！<br>LINEで「召喚！' + key + '」とメッセージを送ってね' )
                     }
@@ -121,11 +124,19 @@ io.sockets.on( 'connection', function( socket ){
                     var responseMessage = JSON.parse( body ).result
                     
                     if( me.personality !== 'ojousama' ){
+                        /*
+                        console.log( config.message.base + config.message.endPoint.character + '?message=' + encodeURI( responseMessage ) + '&key=' + config.message.key + '&character_type=' + me.personality)
                         request( config.message.base + config.message.endPoint.character + '?message=' + encodeURI( responseMessage ) + '&key=' + config.message.key + '&character_type=' + me.personality, ( error, response, body ) => {
                             if( !error && response.statusCode == 200 ){
                                 io.sockets.to( socket.id ).emit( 'message', JSON.parse( body ).result )
                             }
                         })
+                        */
+                        
+                        if( me.personality === 'cat' ) responseMessage += 'にゃん！'
+                        else responseMessage += 'わん！'
+                        io.sockets.to( socket.id ).emit( 'message', responseMessage )
+                        
                     } else if( me.personality === 'ojousama' ){
                         responseMessage = responseMessage.replace( /[?|？|!|！]/g, '' )
                         responseMessage += 'ですわ'
