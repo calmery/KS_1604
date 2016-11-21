@@ -37,6 +37,7 @@
 * UserLocal キャラクター会話 API
 * LINE Messaging API
 * SkyWay PeerJS API
+* OpenWeatherMap API
 
 #### フレームワーク・ライブラリ・モジュール
 * Flask 0.11.1
